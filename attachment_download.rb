@@ -1,7 +1,7 @@
 require 'mail'
 require 'yaml'
 
-config = YAML.load_file('config.yml')
+config = YAML.load_file('config/config.yml')
 
 Mail.defaults do
   retriever_method :imap, :address    => config["mail_config"]["address"],
@@ -27,13 +27,19 @@ def download_attachment(mail, download_path)
       File.open("#{download_path}/#{filename}", "w+b", 0644) do |f|
         f.write attachment.body.decoded
         puts "Wrote file to #{download_path} with name #{filename}"
+        return true
       end
     rescue => e
       puts "Unable to save data for #{filename} because #{e.message}"
+      return false
     end
   end
 end
 
-Mail.find_and_delete do |mail|
-  download_attachment(mail, config["download_path"])
+def mark_as_read(uid, imap)
+  imap.uid_store(uid, "+FLAGS", [Net::IMAP::SEEN])
+end
+
+Mail.find(keys: ['NOT','SEEN']) do |mail, imap, uid|
+  mark_as_read(uid, imap) if download_attachment(mail, config["download_path"])
 end
