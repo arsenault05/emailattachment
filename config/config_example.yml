@@ -1,0 +1,7 @@
+download_path: C:/some_dire
+mail_config:
+  address: imap.gmail.com
+  port: 993
+  user_name: myemail@gmail.com
+  password: swordfish
+  enable_ssl: true

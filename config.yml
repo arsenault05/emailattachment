@@ -1,0 +1,7 @@
+download_path: C:/Users/James/Desktop
+mail_config:
+  address: imap.gmail.com
+  port: 993
+  user_name: superduperemailman@gmail.com
+  password: nintendo05
+  enable_ssl: true
