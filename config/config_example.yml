@@ -1,4 +1,4 @@
-download_path: C:/some_dire
+upload_path: uploads
 mail_config:
   address: imap.gmail.com
   port: 993
