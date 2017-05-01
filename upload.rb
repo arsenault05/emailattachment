@@ -6,7 +6,7 @@ PDF_MIME_TYPE = 'application/pdf'
 
 config = YAML.load_file('config/config.yml')
 session = GoogleDrive::Session.from_config("config/google_config.json")
-exit
+
 Mail.defaults do
   retriever_method :imap, :address    => config["mail_config"]["address"],
                           :port       => config["mail_config"]["port"],
@@ -25,13 +25,10 @@ end
 
 def upload_attachment(mail, download_path, session)
   mail.attachments.each do |attachment|
-    mime_type = attachment.mime_type
-    filename = create_filename(mail, attachment.filename)
-
     begin
-      raise "invalid filetype #{mime_type} can only accept #{PDF_MIME_TYPE}" if mime_type != PDF_MIME_TYPE
+      raise "invalid filetype #{mime_type} can only accept #{PDF_MIME_TYPE}" if attachment.mime_type != PDF_MIME_TYPE
 
-      session.upload_from_file(attachment.filename, filename, convert: false)
+      session.upload_from_file(attachment.filename, create_filename(mail, attachment.filename), convert: false)
       puts "Wrote file to google drive with name #{filename}"
 
       return true
